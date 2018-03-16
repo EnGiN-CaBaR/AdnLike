@@ -3,13 +3,20 @@ from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeFor
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.messages import get_messages
 
 from social_django.models import UserSocialAuth
 
 
 def home(request):
-
     return render(request, 'homepage/home.html')
+
+
+def error(request):
+    # storage = get_messages(request)
+    # for message in storage:
+    #     if 'social-auth' in message.tags and 'error' in message.level_tag:
+    return render(request, 'homepage/error.html')
 
 
 @login_required

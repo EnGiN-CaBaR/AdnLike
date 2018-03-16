@@ -8,7 +8,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     {% block title %}<title>InfX</title>{% endblock %}
 </head>
 <body>
@@ -23,18 +22,21 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'homepage:settings' %}">Settings<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{% url 'homepage:settings' %}">Settings<span
+                                class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="document.getElementById('soForm').submit()">Logout<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#" onclick="document.getElementById('soForm').submit()">Logout<span
+                                class="sr-only">(current)</span></a>
                     </li>
                     <form method="POST" id="soForm" action="{% url 'accounts:logout' %}">
                         {% csrf_token %}
-                    <input type="hidden">
+                        <input type="hidden">
                     </form>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:signup' %}">Signup<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{% url 'accounts:signup' %}">Signup<span
+                                class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
@@ -62,6 +64,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
 
 </body>
 </html>

@@ -18,6 +18,18 @@ def signup(request):
         return render(request, 'accounts/signup.html')
 
 
+def login_user(request):
+    return render(request, 'accounts/login.html')
+
+
+def influencer_login(request):
+    return render(request, 'accounts/influencer.html', context={'user_type': 'influencer'})
+
+
+def brand_login(request):
+    return render(request, 'accounts/brand.html', context={'user_type': 'brand'})
+
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']

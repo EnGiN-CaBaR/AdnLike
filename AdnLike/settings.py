@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mm1ktv)&m4c2a@re)%%db5kx+ajotj1gea0u5dzz#$b-y7bqg8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -50,7 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
+    'accounts.middleware.SocialAuthLoginExceptionMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'AdnLike.urls'
@@ -117,31 +118,43 @@ SOCIAL_AUTH_PIPELINE = (
     # already part of the auth response from the provider, but sometimes this
     # could hit a provider API.
     'social_core.pipeline.social_auth.social_details',
+
     # Get the social uid from whichever service we're authing thru. The uid is
     # the unique identifier of the given user in the provider.
     'social_core.pipeline.social_auth.social_uid',
+
     # Verifies that the current auth process is valid within the current
     # project, this is where emails and domains whitelists are applied (if
     # defined).
     'social_core.pipeline.social_auth.auth_allowed',
+
     # Checks if the current social-account is already associated in the site.
     'social_core.pipeline.social_auth.social_user',
+
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
     'social_core.pipeline.user.get_username',
+
     # Send a validation email to the user to verify its email address.
     # Disabled by default.
-    'social_core.pipeline.mail.mail_validation',
+    #'social_core.pipeline.mail.mail_validation',
+
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
-    'social_core.pipeline.social_auth.associate_by_email',
+    #'social_core.pipeline.social_auth.associate_by_email',
+
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',
+
+    'accounts.pipeline.add_user_to_group',
+
     # Create the record that associates the social account with the user.
     'social_core.pipeline.social_auth.associate_user',
+
     # Populate the extra_data field in the social record with the values
     # specified by settings (and the default ones like access_token, etc).
     'social_core.pipeline.social_auth.load_extra_data',
+
     # Update the user record with any changed info from the auth service.
     'social_core.pipeline.user.user_details',)
 
@@ -162,7 +175,7 @@ USE_TZ = True
 #LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'home'
-
+SOCIAL_AUTH_LOGIN_ERROR_URL = 'error'
 
 STATIC_URL = '/static/'
 
@@ -172,6 +185,24 @@ SOCIAL_AUTH_TWITTER_SECRET = 'DJ8NsEZbWLGvy85FyNkosGNSgxuMJuq8rBpYdd6LvRSs2dYuhl
 SOCIAL_AUTH_FACEBOOK_KEY = '370066803470733'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = 'e38faa1ba4072868b7d356d3d19b9316'
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/settings/error.html'
-#SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
+SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email, age_range'
+}
+
+# SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'auth_type': 'reauthenticate'} #in_production
+# SOCIAL_AUTH_TWITTER_AUTH_EXTRA_ARGUMENTS = {'force_login': 'true'} #in_production
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+
+# SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.12'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['key']
