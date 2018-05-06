@@ -1,17 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from AdnLike import urls
 
 
 def signup(request):
     if request.method == 'POST':
-        if request.POST['password1'] == request.POST['password2']:
+        username = request.POST['username']
+        password = request.POST['password']
+        password_confirmation = request.POST['password_confirmation']
+        if password == password_confirmation:
             try:
-                user = User.objects.get(username=request.POST['username'])
+                user = User.objects.get(username=username)
                 return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
             except User.DoesNotExist:
-                user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
-                return render(request, 'accounts/signup.html')
+                user = User.objects.create_user(username=username, password=password)
+                user_authenticated = authenticate(username=username, password=password)
+                if user_authenticated is not None:
+                    login(request, user_authenticated)
+                    return redirect('home')
         else:
             return render(request, 'accounts/signup.html', {'error': 'Password didn\'t match'})
     else:
@@ -50,5 +57,3 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('home')
-
-

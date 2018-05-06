@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mm1ktv)&m4c2a@re)%%db5kx+ajotj1gea0u5dzz#$b-y7bqg8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -59,8 +60,7 @@ ROOT_URLCONF = 'AdnLike.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), STATIC_ROOT],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,6 +146,13 @@ SOCIAL_AUTH_PIPELINE = (
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',
 
+    # Populate City, Country
+    'accounts.pipeline.populate_location',
+
+    # Populate User Profile
+    'accounts.pipeline.populate_user_profile',
+
+    # Add user to selected group by user
     'accounts.pipeline.add_user_to_group',
 
     # Create the record that associates the social account with the user.
@@ -192,10 +199,23 @@ SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_likes', 'user_posts', 'user_location', 'user_birthday', 'read_insights']
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_location', 'user_birthday']
+
+
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id, name, email, age_range'
+    'fields': ['name, '
+               'first_name, '
+               'last_name, '
+               'age_range, '
+               'gender, '
+               'location, '
+               'timezone, '
+               'verified, '
+               'birthday, '
+               'email']
 }
+
 
 # SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'auth_type': 'reauthenticate'} #in_production
 # SOCIAL_AUTH_TWITTER_AUTH_EXTRA_ARGUMENTS = {'force_login': 'true'} #in_production
