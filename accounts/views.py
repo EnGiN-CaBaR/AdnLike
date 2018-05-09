@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from accounts import user_settings
 from django.http import JsonResponse
 
 
@@ -18,32 +18,28 @@ def signup(request):
     if request.method == 'POST':
         username = request.POST['register_username']
         is_taken = User.objects.filter(username__iexact=username).exists()
+        user_group = request.POST.get('next', None)
         if is_taken:
-            group = request.POST.get('next', None)
             data = {
-                'is_taken': is_taken, 'group': group
+                'is_taken': is_taken, 'group': user_group
             }
             return JsonResponse(data)
         else:
             password = request.POST['register_password']
-            password_confirmation = request.POST['password_confirmation']
-            if password == password_confirmation:
-                try:
-                    user = User.objects.get(username=username)
-                    return redirect('home')
-                except User.DoesNotExist:
-                    user = User.objects.create_user(username=username, password=password)
-                    user_authenticated = authenticate(username=username, password=password)
-                    if user_authenticated is not None:
-                        login(request, user_authenticated)
-                        data = {
-                            'success': True,
-                            'redirect_url': '/'
-                        }
-                        return JsonResponse(data)
-            else:
-                messages.add_message(request, messages.ERROR, 'Password didn\'t match')
+            try:
+                user = User.objects.get(username=username)
                 return redirect('home')
+            except User.DoesNotExist:
+                user = User.objects.create_user(username=username, password=password)
+                user_settings.add_user_to_group(user, True, user_group)
+                user_authenticated = authenticate(username=username, password=password)
+                if user_authenticated is not None:
+                    login(request, user_authenticated)
+                    data = {
+                        'success': True,
+                        'redirect_url': '/'
+                    }
+                    return JsonResponse(data)
     else:
         return redirect('home')
 

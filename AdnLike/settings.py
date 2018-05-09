@@ -147,13 +147,13 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.create_user',
 
     # Populate City, Country
-    'accounts.pipeline.populate_location',
+    'accounts.pipeline.social_auth_populate_location',
 
     # Populate User Profile
-    'accounts.pipeline.populate_user_profile',
+    'accounts.pipeline.social_auth_populate_user_profile',
 
     # Add user to selected group by user
-    'accounts.pipeline.add_user_to_group',
+    'accounts.pipeline.social_auth_add_user_to_group',
 
     # Create the record that associates the social account with the user.
     'social_core.pipeline.social_auth.associate_user',
