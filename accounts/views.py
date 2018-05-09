@@ -1,56 +1,65 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from AdnLike import urls
+from django.contrib import messages
+from django.http import JsonResponse
+
+
+def validate_username(request):
+    username = request.POST.get('register_username', None)
+    group = request.POST.get('next', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists(), 'group': group
+    }
+    return JsonResponse(data)
 
 
 def signup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        password_confirmation = request.POST['password_confirmation']
-        if password == password_confirmation:
-            try:
-                user = User.objects.get(username=username)
-                return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
-            except User.DoesNotExist:
-                user = User.objects.create_user(username=username, password=password)
-                user_authenticated = authenticate(username=username, password=password)
-                if user_authenticated is not None:
-                    login(request, user_authenticated)
-                    return redirect('home')
+        username = request.POST['register_username']
+        is_taken = User.objects.filter(username__iexact=username).exists()
+        if is_taken:
+            group = request.POST.get('next', None)
+            data = {
+                'is_taken': is_taken, 'group': group
+            }
+            return JsonResponse(data)
         else:
-            return render(request, 'accounts/signup.html', {'error': 'Password didn\'t match'})
+            password = request.POST['register_password']
+            password_confirmation = request.POST['password_confirmation']
+            if password == password_confirmation:
+                try:
+                    user = User.objects.get(username=username)
+                    return redirect('home')
+                except User.DoesNotExist:
+                    user = User.objects.create_user(username=username, password=password)
+                    user_authenticated = authenticate(username=username, password=password)
+                    if user_authenticated is not None:
+                        login(request, user_authenticated)
+                        data = {
+                            'success': True,
+                            'redirect_url': '/'
+                        }
+                        return JsonResponse(data)
+            else:
+                messages.add_message(request, messages.ERROR, 'Password didn\'t match')
+                return redirect('home')
     else:
-        return render(request, 'accounts/signup.html')
-
-
-def login_user(request):
-    return render(request, 'accounts/login.html')
-
-
-def influencer_login(request):
-    return render(request, 'accounts/influencer.html', context={'user_type': 'influencer'})
-
-
-def brand_login(request):
-    return render(request, 'accounts/brand.html', context={'user_type': 'brand'})
+        return redirect('home')
 
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['login_username']
+        password = request.POST['login_password']
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            if 'next' in request.POST:
-                return redirect(request.POST['next'][:-1])
             return redirect('home')
         else:
             return render(request, 'accounts/login.html', {'error': 'Username and password didn\'t match'})
     else:
-        return render(request, 'accounts/login.html')
+        return redirect('home')
 
 
 def logout_view(request):

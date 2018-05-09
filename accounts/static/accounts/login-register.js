@@ -14,8 +14,14 @@ function showGroupForm() {
     $('.modal-title').html('Which one are you?');
 }
 
-function showRegisterForm(objButton) {
-    var fired_button = objButton.value;
+function showRegisterForm(objButton, group) {
+    if (typeof(group) === 'undefined') {
+        var fired_button = objButton.value;
+    }
+    else {
+        var fired_button = group;
+    }
+
     document.getElementById("next_val").value = fired_button;
 
     $('#facebook_login').each(function () {
@@ -62,7 +68,7 @@ function openGroupModal() {
 }
 
 function openRegisterModal(objButton) {
-    showRegisterForm(objButton);
+    showRegisterForm(objButton, undefined);
     setTimeout(function () {
         $('#loginModal').modal('show');
     }, 230);

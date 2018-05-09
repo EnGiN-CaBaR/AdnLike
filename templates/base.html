@@ -23,6 +23,42 @@
     <link href="{% static "accounts/login-register.css" %}" rel="stylesheet" type="text/css"/>
     <link href="{% static "accounts/font-awesome.css" %}" rel="stylesheet" type="text/css"/>
 
+    <script>
+        $(document).on("submit", "#registerBox", function (e) {
+            e.preventDefault()
+            var login_form = $('#registerBox');
+            var method = login_form.attr('method');
+            var data_ = login_form.serialize();
+
+            $.ajax({
+                type: method,
+                url: '{% url 'accounts:signup' %}',
+                data: data_,
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.is_taken) {
+                        $(document).ready(function () {
+                            showRegisterForm(undefined, data.group)
+                            $("#id_error").text('Username already been taken.');
+                        })
+                    }
+                    else {
+                        $(this).trigger(e.type);
+                    }
+                }
+            }).done(function (data) {
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                }
+            });
+
+
+        });
+
+
+    </script>
+
 
     {% block title %}<title>InfX</title>{% endblock %}
 </head>
@@ -136,13 +172,17 @@
                             <span>or</span>
                             <div class="line r"></div>
                         </div>
-                        <div class="error"></div>
+
+                        <div class="error" id="id_error"></div>
+
                         <div class="form loginBox">
-                            <form method="post" action="/login" accept-charset="UTF-8">
-                                <input id="username" class="form-control" type="text" placeholder="Email"
-                                       name="username">
-                                <input id="password" class="form-control" type="password" placeholder="Password"
-                                       name="password">
+                            <form method="post" action="{% url 'accounts:login' %}" accept-charset="UTF-8"
+                                  id="loginBox">
+                                {% csrf_token %}
+                                <input id="login_username" class="form-control" type="text" placeholder="Email"
+                                       name="login_username">
+                                <input id="login_password" class="form-control" type="password" placeholder="Password"
+                                       name="login_password">
                                 <input class="btn btn-default btn-login" type="button" value="Login"
                                        onclick="loginAjax()">
                             </form>
@@ -152,13 +192,14 @@
                 <div class="box">
                     <div class="content registerBox" style="display:none;">
                         <div class="form">
-                            <form method="post" action="{% url 'accounts:signup' %}">
+                            <form method="post" action="{% url 'accounts:signup' %}" id="registerBox">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" id="next_val" val=""/>
-                                <input id="username" class="form-control" type="text" placeholder="Email"
-                                       name="username">
-                                <input id="password" class="form-control" type="password" placeholder="Password"
-                                       name="password">
+                                <input id="register_username" class="form-control" type="text" placeholder="Email"
+                                       name="register_username">
+                                <input id="register_password" class="form-control" type="password"
+                                       placeholder="Password"
+                                       name="register_password">
                                 <input id="password_confirmation" class="form-control" type="password"
                                        placeholder="Repeat Password" name="password_confirmation">
                                 <input class="btn btn-default btn-register" type="submit" value="Create account"
@@ -172,14 +213,14 @@
                 <div class="box">
                     <div class="content groupBox" style="display:none;">
                         <div class="btn-group">
-                            <input class="btn btn-default btn-grp" type="submit" value="Influencer" name="Submit"
+                            <input class="btn btn-default btn-grp" type="submit" value="influencer" name="Submit"
                                    onclick="openRegisterModal(this)"/>
                             <div class="division" id="div2">
                                 <div class="line l"></div>
                                 <span>or</span>
                                 <div class="line r"></div>
                             </div>
-                            <input class="btn btn-default btn-grp" type="submit" value="Brand" name="Submit"
+                            <input class="btn btn-default btn-grp" type="submit" value="brand" name="Submit"
                                    onclick="openRegisterModal(this)"/>
                         </div>
                     </div>
