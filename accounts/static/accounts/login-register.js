@@ -8,6 +8,7 @@
  */
 
 function showGroupForm() {
+    $("#id_error").empty();
     $('#loginModal .social, #div1, .loginBox, .registerBox, .login-footer').fadeOut('fast', function () {
         $('.groupBox, #div2, .register-footer').fadeIn('fast');
     });
@@ -28,7 +29,7 @@ function showRegisterForm(objButton, group) {
         this.href += '?key=' + fired_button;
     });
 
-
+    $("#id_error").empty();
     $('.loginBox, .groupBox').fadeOut('fast', function () {
         $('.registerBox, #loginModal .social, #div1').fadeIn('fast');
         $('.login-footer').fadeOut('fast', function () {
