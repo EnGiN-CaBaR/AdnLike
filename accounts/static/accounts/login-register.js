@@ -1,9 +1,7 @@
 /*
  *
  * login-register modal
- * Autor: Creative Tim
- * Web-autor: creative.tim
- * Web script: http://creative-tim.com
+ * Autor: Engin Cabar
  *
  */
 

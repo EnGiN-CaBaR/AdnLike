@@ -51,9 +51,17 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            data = {
+                'success': True,
+                'redirect_url': '/'
+            }
+            return JsonResponse(data)
         else:
-            return render(request, 'accounts/login.html', {'error': 'Username and password didn\'t match'})
+            data = {
+                'success': False,
+                'message': 'Username or password are not correct!!'
+            }
+            return JsonResponse(data)
     else:
         return redirect('home')
 

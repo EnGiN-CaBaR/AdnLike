@@ -25,5 +25,6 @@ urlpatterns = [
     path('login-error/', views.error, name='error'),
     path('accounts/', include('accounts.urls')),
     path('homepage/', include('homepage.urls')),
+                  path('influencer/', include('influencer.urls')),
     path('oauth/', include('social_django.urls', namespace='social')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

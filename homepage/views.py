@@ -9,7 +9,15 @@ from social_django.models import UserSocialAuth
 
 
 def home(request):
-    return render(request, 'homepage/home.html')
+    if not request.user.is_authenticated:
+        return render(request, 'homepage/home.html')
+    else:
+        if request.user.groups.all()[0].name == 'influencer':
+            return redirect('influencer:ad_recommend_list')
+        elif request.user.groups.all()[0].name == 'brand':
+            pass
+        else:
+            return render(request, 'homepage/home.html')
 
 
 def error(request):

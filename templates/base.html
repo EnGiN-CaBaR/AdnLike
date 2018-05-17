@@ -25,26 +25,71 @@
 
     <script>
         $(document).on("submit", "#registerBox", function (e) {
-            e.preventDefault()
-            var login_form = $('#registerBox');
+
+            if ($('#register_password').val() === $('#password_confirmation').val()) {
+                e.preventDefault();
+                var register_form = $('#registerBox');
+                var method = register_form.attr('method');
+                var data_ = register_form.serialize();
+
+                $.ajax({
+                    type: method,
+                    url: '{% url 'accounts:signup' %}',
+                    data: data_,
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data.is_taken) {
+                            $(document).ready(function () {
+                                showRegisterForm(undefined, data.group);
+                                $("#id_error").text('Username has already been taken.');
+                            })
+                        }
+                        else {
+                            $(this).trigger(e.type);
+                        }
+                    }
+                }).done(function (data) {
+                    if (data.success) {
+                        window.location.href = data.redirect_url;
+                    }
+                });
+            }
+            else {
+                e.preventDefault();
+                $(document).ready(function () {
+                    showRegisterForm(undefined, document.getElementById("next_val").value);
+                    $('#register_password').empty();
+                    $('#password_confirmation').empty();
+                    $("#id_error").text('Password didn\'t match.');
+                })
+
+            }
+
+        });
+
+
+        $(document).on("submit", "#loginBox", function (e) {
+            e.preventDefault();
+            var login_form = $('#loginBox');
             var method = login_form.attr('method');
             var data_ = login_form.serialize();
 
             $.ajax({
                 type: method,
-                url: '{% url 'accounts:signup' %}',
+                url: '{% url 'accounts:login' %}',
                 data: data_,
                 dataType: 'json',
                 success: function (data) {
 
-                    if (data.is_taken) {
-                        $(document).ready(function () {
-                            showRegisterForm(undefined, data.group)
-                            $("#id_error").text('Username has already been taken.');
-                        })
+                    if (data.success) {
+                        $(this).trigger(e.type);
                     }
                     else {
-                        $(this).trigger(e.type);
+                        $(document).ready(function () {
+                            showLoginForm();
+                            $("#id_error").text(data.message);
+                        })
                     }
                 }
             }).done(function (data) {
@@ -183,8 +228,7 @@
                                        name="login_username">
                                 <input id="login_password" class="form-control" type="password" placeholder="Password"
                                        name="login_password">
-                                <input class="btn btn-default btn-login" type="button" value="Login"
-                                       onclick="loginAjax()">
+                                <input class="btn btn-default btn-login" type="submit" value="Login" name="login">
                             </form>
                         </div>
                     </div>

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'homepage',
     'social_django',
+    'influencer',
 ]
 
 MIDDLEWARE = [
