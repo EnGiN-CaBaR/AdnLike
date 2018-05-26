@@ -16,7 +16,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = 'mm1ktv)&m4c2a@re)%%db5kx+ajotj1gea0u5dzz#$b-y7bqg8'
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
-
 
 # Application definition
 
@@ -42,6 +40,8 @@ INSTALLED_APPS = [
     'homepage',
     'social_django',
     'influencer',
+    'advertisement',
+    'reset_migrations',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +83,6 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'AdnLike.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -93,7 +92,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -138,11 +136,11 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Send a validation email to the user to verify its email address.
     # Disabled by default.
-    #'social_core.pipeline.mail.mail_validation',
+    # 'social_core.pipeline.mail.mail_validation',
 
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
-    #'social_core.pipeline.social_auth.associate_by_email',
+    # 'social_core.pipeline.social_auth.associate_by_email',
 
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',
@@ -179,8 +177,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-#LOGIN_URL = 'login'
-#LOGOUT_URL = 'logout'
+# LOGIN_URL = 'login'
+# LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'error'
@@ -203,7 +201,6 @@ SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 # SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_likes', 'user_posts', 'user_location', 'user_birthday', 'read_insights']
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_location', 'user_birthday']
 
-
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': ['name, '
                'first_name, '
@@ -216,7 +213,6 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
                'birthday, '
                'email']
 }
-
 
 # SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'auth_type': 'reauthenticate'} #in_production
 # SOCIAL_AUTH_TWITTER_AUTH_EXTRA_ARGUMENTS = {'force_login': 'true'} #in_production
