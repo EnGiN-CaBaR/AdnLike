@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'social_django',
     'influencer',
     'advertisement',
-    'reset_migrations',
 ]
 
 MIDDLEWARE = [

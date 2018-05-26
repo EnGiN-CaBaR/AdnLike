@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from advertisement.models import AdvertisementSummary
+from advertisement.models import AdvSummary
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 import datetime
@@ -7,7 +7,7 @@ import datetime
 
 class AdvertisementForm(ModelForm):
     class Meta:
-        model = AdvertisementSummary
+        model = AdvSummary
         fields = ['name', 'budget', 'max_fee_per_like', 'expire_date']
 
     def clean_expire_date(self):

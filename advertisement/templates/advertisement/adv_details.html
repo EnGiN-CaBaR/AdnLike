@@ -7,14 +7,17 @@
 <body>
 {% extends 'base.html' %}
 
+{% block content %}
 
-<form action="" method="post">
+<form action="{% url 'advertisement:ads_summary' %}" method="post">
     {% csrf_token %}
     <table>
-        {{ createNewAdvertisementForm.as_p }}
+        {{ createNewAdvertisementForm }}
     </table>
     <input type="submit" value="Submit"/>
 </form>
+
+{% endblock %}
 
 </body>
 </html>
