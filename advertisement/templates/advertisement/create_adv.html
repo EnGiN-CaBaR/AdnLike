@@ -5,11 +5,12 @@
     <title>AdnX</title>
 </head>
 <body>
+
 {% extends 'base.html' %}
 
 {% block content %}
 
-<form action="{% url 'advertisement:ads_summary' %}" method="post">
+<form action="{% url 'advertisement:adv_summary' %}" method="post">
     {% csrf_token %}
     <table>
         {{ createNewAdvertisementForm }}

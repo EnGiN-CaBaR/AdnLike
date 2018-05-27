@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AdnX</title>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    <form action="{% url 'advertisement:adv_summary' %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for field in createNewAdvertisementForm %}
+                <div class="col-lg-6 col-md-12 col-sm-12 ">
+                    <table class="table table-borderless">
+                        <tbody>
+                        <tr>
+                            <td><h3>{{ field.label_tag }}</h3></td>
+                        </tr>
+                        <tr>
+                            <td>{{ field }} {{ field.errors }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td><input type="submit" class="btn btn-primary btn-lg" value="Create Advertisement"/></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </form>
+
+{% endblock %}
+
+</body>
+</html>
