@@ -4,6 +4,7 @@ from . import views
 app_name = 'advertisement'
 
 urlpatterns = [
-    path('adv_summary/', views.summary, name='adv_summary'),
-    path('create_adv/', views.create_adv, name='create_adv'),
+    path('create_adv/', views.CreateAdvertisement.as_view(), name='create'),
+    path('create_adv/publish/<slug:adv_slug_name>/<int:pk>/',
+         views.PublishAdvertisement.as_view(), name='publish'),
 ]
