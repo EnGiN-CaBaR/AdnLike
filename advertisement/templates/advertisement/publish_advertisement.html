@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ advsummary.name }}</h2>
+    <div class="row">
+        <div class="col-lg-4 col-md-12 col-sm-12 ">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td><h2>Ad Budget</h2></td>
+                </tr>
+                <tr>
+                    <td><h3>{{ advsummary.budget }}</h3></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12 ">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td><h2>Max Fee Per Like</h2></td>
+                </tr>
+                <tr>
+                    <td><h3>{{ advsummary.max_fee_per_like }}</h3></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12 ">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td><h2>Ad Expire Date</h2></td>
+                </tr>
+                <tr>
+                    <td><h3>{{ advsummary.expire_date }}</h3></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <h4>Advertisement Categories</h4>
+        <div class="row">
+            {% for field in form.categories %}
+                <div class="    col-lg-1 col-md-12 col-sm-12 ">
+                    <table class="table table-borderless">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.choice_label }}<span class="radio">{{ field.tag }}</span>
+                                </label></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for field in form %}
+                {% if field.id_for_label not in 'id_categories' and field.id_for_label in 'id_adv_desc' %}
+                    <div class="col-lg-6 col-md-12 col-sm-12 ">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <tr>
+                                <td><h3>{{ field.label_tag }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ field }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for field in form %}
+                {% if field.id_for_label not in 'id_categories' and field.id_for_label not in 'id_adv_desc' %}
+                    <div class="col-lg-6 col-md-12 col-sm-12 ">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <tr>
+                                <td><h3>{{ field.label_tag }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ field }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
+
+{% endblock %}

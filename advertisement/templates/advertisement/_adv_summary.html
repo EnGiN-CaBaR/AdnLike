@@ -8,12 +8,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-
+    <h2>Create New Advertisement</h2>
     <form action="{% url 'advertisement:adv_summary' %}" method="post">
         {% csrf_token %}
         <div class="row">
-            {% for field in createNewAdvertisementForm %}
+            {% for field in create_advertisement_soft_form %}
                 <div class="col-lg-6 col-md-12 col-sm-12 ">
                     <table class="table table-borderless">
                         <tbody>
@@ -21,7 +20,10 @@
                             <td><h3>{{ field.label_tag }}</h3></td>
                         </tr>
                         <tr>
-                            <td>{{ field }} {{ field.errors }}</td>
+                            <td>{{ field }}</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color:red">{{ field.errors }}</span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -30,16 +32,12 @@
             <table class="table table-borderless">
                 <tbody>
                 <tr>
-                    <td><input type="submit" class="btn btn-primary btn-lg" value="Create Advertisement"/></td>
+                    <td><input type="submit" class="btn btn-primary btn-lg" value="Next"/></td>
                 </tr>
                 </tbody>
             </table>
-
         </div>
-
     </form>
-
 {% endblock %}
-
 </body>
 </html>
