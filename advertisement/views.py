@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
-from .models import AdvSummary
+from .models import AdvSummary, Category
 from django.utils.text import slugify
 
 from .forms import AdvertisementSoftForm, AdvertisementDetailForm
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 from decimal import Decimal
@@ -30,7 +30,7 @@ class CreateAdvertisement(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
-class PublishAdvertisementDisplay(generic.DetailView):
+class PublishAdvertisementDetail(generic.DetailView):
     model = AdvSummary
     template_name = 'advertisement/publish_advertisement.html'
 
@@ -40,7 +40,7 @@ class PublishAdvertisementDisplay(generic.DetailView):
         return context
 
 
-class PublishAdvertisementForm(generic.detail.SingleObjectMixin, generic.FormView):
+class PublishAdvertisementCreate(generic.detail.SingleObjectMixin, generic.FormView):
     template_name = 'advertisement/publish_advertisement.html'
     form_class = AdvertisementDetailForm
     model = AdvSummary
@@ -50,17 +50,50 @@ class PublishAdvertisementForm(generic.detail.SingleObjectMixin, generic.FormVie
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('adv-detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('advertisement:create')
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk')
+        obj = get_object_or_404(AdvSummary, pk=pk)
+        obj.adv_image = self.request.POST['adv_image']
+        obj.adv_max_follower = self.request.POST['adv_max_follower']
+        obj.adv_min_follower = self.request.POST['adv_min_follower']
+        obj.adv_desc = self.request.POST['adv_desc']
+        selected_categories = Category.objects.filter(pk__in=self.request.POST.getlist('categories'))
+        obj.category_set.set(selected_categories)
+        obj.save()
+        return super().form_valid(form)
 
 
 class PublishAdvertisement(generic.View):
     def get(self, request, *args, **kwargs):
-        view = PublishAdvertisementDisplay.as_view()
+        view = PublishAdvertisementDetail.as_view()
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        view = PublishAdvertisementForm.as_view()
+        view = PublishAdvertisementCreate.as_view()
         return view(request, *args, **kwargs)
+
+
+class UpdateAdvertisement(LoginRequiredMixin, generic.UpdateView):
+    form_class = AdvertisementSoftForm
+    template_name = 'advertisement/update_advertisement.html'
+
+    form_class = AdvertisementSoftForm
+
+    model = AdvSummary
+
+
+
+
+
+
+
+
+
+
+
+
 
 # @login_required()
 # def summary(request):

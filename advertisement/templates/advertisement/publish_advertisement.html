@@ -44,24 +44,8 @@
         {% csrf_token %}
         <h4>Advertisement Categories</h4>
         <div class="row">
-            {% for field in form.categories %}
-                <div class="    col-lg-1 col-md-12 col-sm-12 ">
-                    <table class="table table-borderless">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <label for="{{ field.id_for_label }}">
-                                    {{ field.choice_label }}<span class="radio">{{ field.tag }}</span>
-                                </label></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="row">
             {% for field in form %}
-                {% if field.id_for_label not in 'id_categories' and field.id_for_label in 'id_adv_desc' %}
+                {% if field.id_for_label in 'id_categories' or field.id_for_label in 'id_adv_desc' %}
                     <div class="col-lg-6 col-md-12 col-sm-12 ">
                         <table class="table table-borderless">
                             <tbody>
@@ -71,6 +55,19 @@
                             <tr>
                                 <td>
                                     {{ field }}</td>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <small id="passwordHelpBlock" class="form-text text-muted">
+                                        {% if field.help_text %}
+                                            <p class="help">{{ field.help_text|safe }}</p>
+                                        {% endif %}
+                                    </small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span style="color:red">{{ field.errors }}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -80,7 +77,40 @@
         </div>
         <div class="row">
             {% for field in form %}
-                {% if field.id_for_label not in 'id_categories' and field.id_for_label not in 'id_adv_desc' %}
+                {% if field.id_for_label not in 'id_categories' %}
+                    {% if field.id_for_label in 'id_adv_min_follower' or field.id_for_label in 'id_adv_max_follower' %}
+                        <div class="col-lg-6 col-md-12 col-sm-12 ">
+                            <table class="table table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td><h3>{{ field.label_tag }}</h3></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ field }}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <small id="passwordHelpBlock" class="form-text text-muted">
+                                            {% if field.help_text %}
+                                                <p class="help">{{ field.help_text|safe }}</p>
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span style="color:red">{{ field.errors }}</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for field in form %}
+                {% if field.id_for_label not in 'id_categories' and field.id_for_label in 'id_adv_image' %}
                     <div class="col-lg-6 col-md-12 col-sm-12 ">
                         <table class="table table-borderless">
                             <tbody>
@@ -89,7 +119,28 @@
                             </tr>
                             <tr>
                                 <td>
-                                    {{ field }}</td>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                            {{ field }}
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <small id="passwordHelpBlock" class="form-text text-muted">
+                                        {% if field.help_text %}
+                                            <p class="help">{{ field.help_text|safe }}</p>
+                                        {% endif %}
+                                    </small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span style="color:red">{{ field.errors }}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -97,7 +148,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-        <input type="submit" value="Submit"/>
+        <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
     </form>
 
 {% endblock %}
