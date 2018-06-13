@@ -1,7 +1,5 @@
-from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path
 from . import views
-from homepage.urls import views as vw
 
 app_name = 'advertisement'
 

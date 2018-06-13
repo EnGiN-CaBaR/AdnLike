@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_django',
     'influencer',
     'advertisement',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -184,12 +185,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'error'
-
-
 
 SOCIAL_AUTH_TWITTER_KEY = '0Yr9XaCgzFn5woSN4J6E3nbsh'
 SOCIAL_AUTH_TWITTER_SECRET = 'DJ8NsEZbWLGvy85FyNkosGNSgxuMJuq8rBpYdd6LvRSs2dYuhl'

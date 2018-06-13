@@ -3,24 +3,30 @@ import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils.text import slugify
 from django.utils import timezone
 
 User = get_user_model()
+
+
+def user_directory_path(instance, filename):
+    my_custom_date = timezone.now().date()
+    return 'advertisement_image/{0}/user_{1}/{2}'.format(my_custom_date, instance.username.id, filename)
 
 
 class AdvSummary(models.Model):
     id = models.AutoField(primary_key=True)
     guid = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
     username = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    categories = models.ManyToManyField('advertisement.Category', through='AdvCategory')
+    categories = models.ManyToManyField('advertisement.Category')
     name = models.CharField(max_length=255)
     adv_slug_name = models.SlugField(allow_unicode=True, unique=True, null=True)
     brand_slug_name = models.SlugField(allow_unicode=True, unique=True, null=True)
     budget = models.DecimalField(max_digits=38, decimal_places=2)
     max_fee_per_like = models.IntegerField()
     expire_date = models.DateField()
-    adv_image = models.ImageField(upload_to='adv_image/', verbose_name='Advertisement Image', null=True, blank=True)
+    advertisement_image = models.ImageField(upload_to=user_directory_path,
+                                            verbose_name='Advertisement Image',
+                                            null=True, blank=True)
     adv_desc = models.CharField(max_length=255, verbose_name='Advertisement Description', null=True)
     adv_min_follower = models.IntegerField(verbose_name='Advertisement Minimum Follower', null=True)
     adv_max_follower = models.IntegerField(verbose_name='Advertisement Maximum Follower', null=True)
@@ -54,17 +60,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class AdvCategory(models.Model):
-    advertisement = models.ForeignKey(AdvSummary, related_name='advsummary', on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.advertisement.name
-
-    class Meta:
-        unique_together = ('advertisement', 'category')
 
 
 class Brand(models.Model):

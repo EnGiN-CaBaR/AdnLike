@@ -10,12 +10,13 @@ class AdvertisementSoftForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update(
-            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Name'})
+            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Name', 'autocomplete': 'off'})
         self.fields['budget'].widget.attrs.update(
-            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Budget'})
+            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Budget', 'autocomplete': 'off'})
         self.fields['max_fee_per_like'].widget.attrs.update(
-            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Max Fee Per Like'})
-        self.fields['expire_date'].widget.attrs.update({'class': 'form-control form-control-lg'})
+            {'class': 'form-control form-control-lg', 'placeholder': 'Advertisement Max Fee Per Like',
+             'autocomplete': 'off'})
+        self.fields['expire_date'].widget.attrs.update({'class': 'form-control form-control-lg', 'autocomplete': 'off'})
 
     class Meta:
         model = AdvSummary
@@ -37,7 +38,7 @@ class AdvertisementDetailForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['categories'].widget.attrs.update({'class': 'form-control form-control-lg'})
-        self.fields['adv_image'].widget.attrs.update(
+        self.fields['advertisement_image'].widget.attrs.update(
             {'class': 'custom-file-input'})
         self.fields['adv_min_follower'].widget.attrs.update(
             {'class': 'form-control form-control-lg', 'placeholder': '0'})
@@ -45,18 +46,18 @@ class AdvertisementDetailForm(ModelForm):
             {'class': 'form-control form-control-lg', 'placeholder': '10000'})
         self.fields['adv_desc'].widget.attrs.update(
             {'class': 'form-control form-control-lg', 'placeholder': 'Descriptions #Hashtags'})
-        self.fields['adv_image'].required = False
+        self.fields['advertisement_image'].required = False
 
     class Meta:
         model = AdvSummary
         exclude = ['brand', 'name', 'budget', 'max_fee_per_like', 'expire_date', 'is_approved', 'username',
-                   'create_date', 'publish_date', 'adv_slug_name', 'brand_slug_name']
+                   'create_date', 'publish_date', 'adv_slug_name', 'brand_slug_name', 'guid']
         widgets = {'adv_desc': Textarea(attrs={'width': '450', 'height': '100', 'style': 'resize:none'})}
 
         help_texts = {'adv_desc': _('Advertisement Description. HashTag must be written here.'),
                       'adv_min_follower': _('Influencer''s minimum follower count'),
                       'adv_max_follower': _('Influencer''s maximum follower count'),
-                      'adv_image': _('Image for Advertisement')}
+                      'advertisement_image': _('Image for Advertisement')}
 
     def clean_categories(self):
         data = self.cleaned_data['categories']

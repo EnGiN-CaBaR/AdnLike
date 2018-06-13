@@ -1,16 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views import generic
 from .models import AdvSummary, Category
 from django.utils.text import slugify
 
 from .forms import AdvertisementSoftForm, AdvertisementDetailForm
-from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-from decimal import Decimal
+from django.urls import reverse_lazy
 
 
 class CreateAdvertisement(LoginRequiredMixin, generic.CreateView):
@@ -24,7 +19,7 @@ class CreateAdvertisement(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         new_adv = form.save(commit=False)
-        new_adv.adv_slug_name = slugify(new_adv.name)
+        new_adv.adv_slug_name = slugify(new_adv.name + "_" + str(new_adv.guid))
         new_adv.username = self.request.user
         new_adv.save()
         return super().form_valid(form)
@@ -55,12 +50,12 @@ class PublishAdvertisementCreate(generic.detail.SingleObjectMixin, generic.FormV
     def form_valid(self, form):
         pk = self.kwargs.get('pk')
         obj = get_object_or_404(AdvSummary, pk=pk)
-        obj.adv_image = self.request.POST['adv_image']
+        obj.advertisement_image = form.cleaned_data['advertisement_image']
         obj.adv_max_follower = self.request.POST['adv_max_follower']
         obj.adv_min_follower = self.request.POST['adv_min_follower']
         obj.adv_desc = self.request.POST['adv_desc']
         selected_categories = Category.objects.filter(pk__in=self.request.POST.getlist('categories'))
-        obj.category_set.set(selected_categories)
+        obj.categories.add(*[cat for cat in selected_categories])
         obj.save()
         return super().form_valid(form)
 
