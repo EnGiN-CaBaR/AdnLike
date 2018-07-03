@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views import generic
@@ -6,16 +7,16 @@ from django.utils.text import slugify
 
 from .forms import AdvertisementSoftForm, AdvertisementDetailForm
 from django.urls import reverse_lazy
+from django.utils import timezone
+
+User = get_user_model()
 
 
-class CreateAdvertisement(LoginRequiredMixin, generic.CreateView):
+class CreateAdvertisement(generic.CreateView):
     form_class = AdvertisementSoftForm
-    template_name = 'advertisement/create_advertisement.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CreateAdvertisement, self).get_context_data()
-        context['create_advertisement_form'] = context['form']
-        return context
+    template_name = 'advertisement/advertisement_brand_home.html'
+    context_object_name = 'create_advertisement_form'
+    model = AdvSummary
 
     def form_valid(self, form):
         new_adv = form.save(commit=False)
@@ -23,6 +24,38 @@ class CreateAdvertisement(LoginRequiredMixin, generic.CreateView):
         new_adv.username = self.request.user
         new_adv.save()
         return super().form_valid(form)
+
+
+class PublishedAdvertisementList(generic.ListView):
+    model = AdvSummary
+    paginate_by = 5
+    template_name = 'advertisement/advertisement_brand_home.html'
+    context_object_name = 'advertisement_list'
+
+    def get_queryset(self):
+        query_set1 = AdvSummary.objects.filter(username__exact=self.request.user).filter(expire_date__gte=timezone.now()).\
+            filter(publish_date__isnull=False).order_by('-publish_date')
+        query_set2 = AdvSummary.objects.filter(expire_date__gte=timezone.now()). \
+            filter(publish_date__isnull=False).order_by('-')
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['create_advertisement_form'] = AdvertisementSoftForm()
+        return context
+
+
+class BrandAdvertisementCreatePublishPage(LoginRequiredMixin, generic.View):
+    login_url = '/'
+    redirect_field_name = '/'
+
+    def post(self, request, *args, **kwargs):
+        view = CreateAdvertisement.as_view()
+        return view(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        view = PublishedAdvertisementList.as_view()
+        return view(request, *args, **kwargs)
 
 
 class PublishAdvertisementDetail(generic.DetailView):
@@ -56,11 +89,15 @@ class PublishAdvertisementCreate(generic.detail.SingleObjectMixin, generic.FormV
         obj.adv_desc = self.request.POST['adv_desc']
         selected_categories = Category.objects.filter(pk__in=self.request.POST.getlist('categories'))
         obj.categories.add(*[cat for cat in selected_categories])
+        obj.publish_date = timezone.now()
         obj.save()
         return super().form_valid(form)
 
 
-class PublishAdvertisement(generic.View):
+class PublishAdvertisement(LoginRequiredMixin, generic.View):
+    login_url = '/'
+    redirect_field_name = '/'
+
     def get(self, request, *args, **kwargs):
         view = PublishAdvertisementDetail.as_view()
         return view(request, *args, **kwargs)

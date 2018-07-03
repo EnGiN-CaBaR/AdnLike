@@ -1,0 +1,42 @@
+{% extends 'homepage/settings_base.html' %}
+{% load bootstrap4 %}
+
+{% block settings %}
+
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-account" role="tabpanel"
+                 aria-labelledby="v-pills-account-tab">
+                <h1>Account</h1>
+                <h2>WELCOME {{ user.username }}</h2>
+
+                <form method="post">{% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    {% endbuttons %}
+                </form>
+
+                <h3>Facebook</h3>
+                {% if facebook_login %}
+                    <p>Connected as <a href="https://facebook.com/{{ facebook_login.extra_data.id }}/"
+                                       target="_blank">{{ facebook_login.extra_data.id }}</a></p>
+                    {% if can_disconnect %}
+                        <form method="post" action="{% url 'social:disconnect' 'facebook' %}">
+                            {% csrf_token %}
+                            <button type="submit">Disconnect from Facebook</button>
+                        </form>
+                    {% else %}
+                        <button type="button" disabled>Disconnect from Facebook</button>
+                        <p style="color: red">You must <a href="{% url 'homepage:password' %}">define a
+                            password</a> for
+                            your account before disconnecting from Facebook.</p>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'social:begin' 'facebook' %}">Connect to Facebook</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

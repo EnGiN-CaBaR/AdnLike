@@ -1,0 +1,43 @@
+{% extends 'homepage/settings_base.html' %}
+{% load bootstrap4 %}
+{% block settings %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#id_birthday").datepicker();
+        });
+
+        $(function () {
+
+            $("#id_birthday").autocomplete({
+                source: availableTags,
+                minLength: 0
+            }).keyup(function (e) {
+                if (e.which === 13) {
+                    $(".ui-menu-item").hide();
+                }
+            });
+        });
+
+    </script>
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-account" role="tabpanel"
+                 aria-labelledby="v-pills-account-tab">
+                <h1>Profile</h1>
+
+                <form method="post">{% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    {% endbuttons %}
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

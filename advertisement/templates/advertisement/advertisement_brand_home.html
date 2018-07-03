@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#id_expire_date").datepicker();
+        });
+
+        $(function () {
+
+            $("#id_expire_date").autocomplete({
+                source: availableTags,
+                minLength: 0
+            }).keyup(function (e) {
+                if (e.which === 13) {
+                    $(".ui-menu-item").hide();
+                }
+            });
+        });
+
+    </script>
+    <h2>Create New Advertisement</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for field in create_advertisement_form %}
+                <div class="col-lg-6 col-md-12 col-sm-12 ">
+                    <table class="table table-borderless">
+                        <tbody>
+                        <tr>
+                            <td><h3>{{ field.label_tag }}</h3></td>
+                        </tr>
+                        <tr>
+                            <td>{{ field }}</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color:red">{{ field.errors }}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td><input type="submit" class="btn btn-primary btn-lg" value="Create Adv"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <h2>Your Current Ads</h2>
+    {% if advertisement_list %}
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Advertisement Name</th>
+                <th scope="col">Number of Likes</th>
+                <th scope="col">Number of Influencer</th>
+                <th scope="col">Expire Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for adv in advertisement_list %}
+                <tr>
+                    <td>{{ adv.name }}</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>{{ adv.expire_date }}</td>
+                    <td><a href="/advertisement/{{ adv.id }}/" class="see_detail">detail</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+        {# .... **Now the pagination section** .... #}
+        {% if is_paginated %}
+            <nav aria-label="Search results pages">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="/advertisement?page={{ page_obj.previous_page_number }}"
+                               tabindex="-1">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"
+                               tabindex="-1">&laquo;</a>
+                        </li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active"><a class="page-link">{{ i }} <span
+                                    class="sr-only">(current)</span></a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="/advertisement?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"
+                               tabindex="-1">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <h3>Advertisement List</h3>
+        <p>No Advertisement found!!!</p>
+    {% endif %}
+{% endblock %}

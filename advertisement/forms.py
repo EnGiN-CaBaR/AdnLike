@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CheckboxSelectMultiple, Textarea, SelectMultiple
+from django.forms import ModelForm, Textarea
 from advertisement.models import AdvSummary, Category
 from django.utils.translation import ugettext_lazy as _
 import datetime

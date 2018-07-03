@@ -31,11 +31,16 @@ class Country(models.Model):
 
 
 class UserProfile(models.Model):
+    MALE = 'MALE'
+    FEMALE = 'FEMALE'
+    GENDER_CHOICES = ((MALE, 'Male'),
+                      (FEMALE, 'Female'))
+
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     city = models.ForeignKey('accounts.City', on_delete=models.SET_NULL, null=True)
     country = models.ForeignKey('accounts.Country', on_delete=models.SET_NULL, null=True)
     birthday = models.DateField(null=True)
-    gender = models.CharField(max_length=10, null=True)
+    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default=MALE)
     timezone = models.IntegerField(null=True)
     verified = models.NullBooleanField()
 

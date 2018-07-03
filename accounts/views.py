@@ -35,10 +35,21 @@ def signup(request):
                 user_authenticated = authenticate(username=username, password=password)
                 if user_authenticated is not None:
                     login(request, user_authenticated)
-                    data = {
-                        'success': True,
-                        'redirect_url': '/'
-                    }
+                    if user_group == 'brand':
+                        data = {
+                            'success': True,
+                            'redirect_url': 'advertisement/'
+                        }
+                    elif user_group == 'influencer':
+                        data = {
+                            'success': True,
+                            'redirect_url': 'influencer/'
+                        }
+                    else:
+                        data = {
+                            'success': False,
+                            'redirect_url': '/'
+                        }
                     return JsonResponse(data)
     else:
         return redirect('home')
@@ -49,12 +60,24 @@ def login_view(request):
         username = request.POST['login_username']
         password = request.POST['login_password']
         user = authenticate(username=username, password=password)
+        user_group = user.groups.values_list('name', flat=True).first()
         if user is not None:
             login(request, user)
-            data = {
-                'success': True,
-                'redirect_url': '/'
-            }
+            if user_group == 'brand':
+                data = {
+                    'success': True,
+                    'redirect_url': 'advertisement/'
+                }
+            elif user_group == 'influencer':
+                data = {
+                    'success': True,
+                    'redirect_url': 'influencer/'
+                }
+            else:
+                data = {
+                    'success': False,
+                    'redirect_url': '/'
+                }
             return JsonResponse(data)
         else:
             data = {

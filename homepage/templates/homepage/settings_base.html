@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-3">
+            <nav class="nav flex-column nav-pills">
+                <a class="nav-link" href="{% url 'homepage:settings_account' user.pk %}">Account</a>
+                <a class="nav-link" href="#">Password</a>
+                <a class="nav-link" href="{% url 'homepage:settings_profile' user.pk %}">Profile</a>
+            </nav>
+        </div>
+        {% block settings %}
+        {% endblock %}
+    </div>
+
+{% endblock %}
