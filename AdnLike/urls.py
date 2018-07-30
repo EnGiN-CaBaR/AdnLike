@@ -28,5 +28,6 @@ urlpatterns = [
                   path('influencer/', include('influencer.urls')),
                   path('advertisement/', include('advertisement.urls')),
                   path('oauth/', include('social_django.urls', namespace='social')),
+                  path('brand/', include('brand.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

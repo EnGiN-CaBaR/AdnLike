@@ -13,10 +13,20 @@ def user_directory_path(instance, filename):
     return 'advertisement_image/{0}/user_{1}/{2}'.format(my_custom_date, instance.username.id, filename)
 
 
+class AdvStats(models.Model):
+    id = models.AutoField(primary_key=True)
+    guid = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
+    adv_id = models.OneToOneField('advertisement.AdvSummary', related_name='adv_stats', on_delete=models.SET_NULL,
+                                  null=True)
+    username = models.ForeignKey(User, related_name='adv_stats', on_delete=models.SET_NULL, null=True)
+    number_of_likes = models.IntegerField(verbose_name='Number Of Likes', null=True, default=0)
+
+
 class AdvSummary(models.Model):
     id = models.AutoField(primary_key=True)
     guid = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
     username = models.ForeignKey(User, related_name='advertisements', on_delete=models.SET_NULL, null=True)
+    slug_name = models.CharField(max_length=100, null=False, default='')
     categories = models.ManyToManyField('advertisement.Category')
     name = models.CharField(max_length=255)
     budget = models.DecimalField(max_digits=38, decimal_places=2)
@@ -45,7 +55,7 @@ class AdvSummary(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        return reverse('advertisement:publish', kwargs={'adv_slug_name': self.adv_slug_name,
+        return reverse('advertisement:publish', kwargs={'slug_name': self.slug_name,
                                                         'pk': self.pk})
 
 
@@ -59,14 +69,3 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
-class Brand(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, null=False)
-    username = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-    adv_slug_name = models.SlugField(allow_unicode=True, unique=True, null=True)
-    insert_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    update_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name

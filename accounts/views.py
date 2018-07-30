@@ -38,7 +38,7 @@ def signup(request):
                     if user_group == 'brand':
                         data = {
                             'success': True,
-                            'redirect_url': 'advertisement/'
+                            'redirect_url': 'brand/'
                         }
                     elif user_group == 'influencer':
                         data = {
@@ -66,7 +66,7 @@ def login_view(request):
             if user_group == 'brand':
                 data = {
                     'success': True,
-                    'redirect_url': 'advertisement/'
+                    'redirect_url': 'brand/'
                 }
             elif user_group == 'influencer':
                 data = {

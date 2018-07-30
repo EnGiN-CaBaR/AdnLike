@@ -22,7 +22,7 @@ def home(request):
         if request.user.groups.all()[0].name == 'influencer':
             return redirect('influencer:ad_recommend_list')
         elif request.user.groups.all()[0].name == 'brand':
-            return redirect('advertisement:create')
+            return redirect('brand:brand_home')
         else:
             return render(request, 'homepage/home.html')
 

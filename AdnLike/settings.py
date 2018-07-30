@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'influencer',
     'advertisement',
     'bootstrap4',
+    'brand',
 ]
 
 MIDDLEWARE = [

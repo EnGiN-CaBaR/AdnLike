@@ -10,6 +10,10 @@ class SettingsAccountForm(ModelForm):
 
 
 class SettingsProfileForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['birthday'].widget.attrs.update({'autocomplete': 'off'})
+
     class Meta:
         model = UserProfile
         fields = ['country', 'city', 'birthday', 'gender', ]

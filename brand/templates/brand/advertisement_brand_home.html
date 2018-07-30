@@ -54,6 +54,86 @@
         </div>
     </form>
 
+
+    <h2>Un-published Advertisements</h2>
+    {% if unpublished_advertisement_list %}
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Advertisement Name</th>
+                <th scope="col">Budget</th>
+                <th scope="col">Max Fee Per Like</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for adv in unpublished_advertisement_list %}
+                <tr>
+                    <td>{{ adv.name }}</td>
+                    <td>{{ adv.budget }}</td>
+                    <td>{{ adv.max_fee_per_like }}</td>
+                    <td><a href="{% url 'advertisement:publish' adv.slug_name adv.pk %}" class="see_detail">continue</a></td>
+                    <td><a href="{% url 'advertisement:delete' adv.slug_name adv.pk %}" class="delete">delete</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+        {# .... **Now the pagination section** .... #}
+        {% if is_paginated %}
+            <nav aria-label="Search results pages">
+                <ul class="pagination justify-content-center">
+                    {% if unpublished_advertisement_list.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="/brand?page={{ unpublished_advertisement_list.previous_page_number }}"
+                               tabindex="-1">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"
+                               tabindex="-1">&laquo;</a>
+                        </li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                        {% if paginator.number == i %}
+                            <li class="page-item active"><a class="page-link">{{ i }} <span
+                                    class="sr-only">(current)</span></a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if unpublished_advertisement_list.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="/brand?page={{ unpublished_advertisement_list.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"
+                               tabindex="-1">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <h3>Advertisement List</h3>
+        <p>No Advertisement found!!!</p>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <h2>Your Current Ads</h2>
     {% if advertisement_list %}
 
@@ -85,7 +165,7 @@
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="/advertisement?page={{ page_obj.previous_page_number }}"
+                            <a class="page-link" href="/brand?page={{ page_obj.previous_page_number }}"
                                tabindex="-1">&laquo;</a>
                         </li>
                     {% else %}
@@ -104,7 +184,7 @@
                     {% endfor %}
                     {% if page_obj.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="/advertisement?page={{ page_obj.next_page_number }}">&raquo;</a>
+                            <a class="page-link" href="/brand?page={{ page_obj.next_page_number }}">&raquo;</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">
