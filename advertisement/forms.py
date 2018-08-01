@@ -26,7 +26,7 @@ class AdvertisementDetailForm(ModelForm):
     class Meta:
         model = AdvSummary
         exclude = ['brand', 'name', 'budget', 'max_fee_per_like', 'expire_date', 'is_approved', 'username',
-                   'create_date', 'publish_date', 'adv_slug_name', 'brand_slug_name', 'guid']
+                   'create_date', 'publish_date', 'slug_name', 'brand_slug_name', 'guid']
         widgets = {'adv_desc': Textarea(attrs={'width': '450', 'height': '100', 'style': 'resize:none'})}
 
         help_texts = {'adv_desc': _('Advertisement Description. HashTag must be written here.'),
