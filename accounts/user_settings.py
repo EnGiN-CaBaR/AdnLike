@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 from social_core.exceptions import AuthFailed
 from accounts.models import Country, City, UserProfile
 
@@ -36,7 +37,15 @@ def populate_country(country):
     return country_object
 
 
-def populate_user_profile(user, city='', country='', birthday='', gender='', timezone='', verified=''):
-    up = UserProfile.objects.update_or_create(user=user, city=city, country=country, birthday=birthday, gender=gender,
-                                              timezone=timezone, verified=verified)
+def populate_user_profile(user, city='', country='', birthday='1900-01-01', gender='', timezone=-1, verified=False):
+    user_profile = UserProfile.objects.filter(user_id__exact=user)
+    if user_profile.exists():
+        up = user_profile.update(user=user, city=city, country=country,
+                                 birthday=birthday, gender=gender,
+                                 timezone=timezone, verified=verified)
+    else:
+        up = UserProfile.objects.create(user=user, city=city, country=country,
+                                        birthday=birthday, gender=gender,
+                                        timezone=timezone, verified=verified)
+
     return up

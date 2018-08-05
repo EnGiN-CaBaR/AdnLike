@@ -2,11 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.messages import get_messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
+
+from accounts.models import UserProfile
 from .forms import SettingsAccountForm, SettingsProfileForm
 from django.contrib.auth import get_user_model
 
@@ -53,7 +56,22 @@ class SettingProfileView(LoginRequiredMixin, generic.UpdateView):
 
     form_class = SettingsProfileForm
     template_name = 'homepage/settings_profile.html'
-    model = User
+    model = UserProfile
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return UserProfile.objects.filter(user_id__exact=user_id)
 
     def get_success_url(self):
         pk = self.kwargs.get('pk')

@@ -40,7 +40,7 @@ class UserProfile(models.Model):
     city = models.ForeignKey('accounts.City', on_delete=models.SET_NULL, null=True)
     country = models.ForeignKey('accounts.Country', on_delete=models.SET_NULL, null=True)
     birthday = models.DateField(null=True)
-    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default=MALE)
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, null=True)
     timezone = models.IntegerField(null=True)
     verified = models.NullBooleanField()
 

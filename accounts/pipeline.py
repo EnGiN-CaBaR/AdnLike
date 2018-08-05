@@ -30,5 +30,5 @@ def social_auth_populate_user_profile(backend, details, response, user=None, *ar
     up = user_settings.populate_user_profile(user, city, country, birthday, gender, timezone, verified)
 
     return {
-        'details': {'is_profile_created': up[1]}
+        'details': {'is_profile_created': up}
     }

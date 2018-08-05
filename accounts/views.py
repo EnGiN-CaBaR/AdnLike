@@ -32,6 +32,9 @@ def signup(request):
             except User.DoesNotExist:
                 user = User.objects.create_user(username=username, password=password)
                 user_settings.add_user_to_group(user, True, user_group)
+                user_city = user_settings.populate_city('')[0]
+                user_country = user_settings.populate_country('')[0]
+                user_settings.populate_user_profile(user, city=user_city, country=user_country)
                 user_authenticated = authenticate(username=username, password=password)
                 if user_authenticated is not None:
                     login(request, user_authenticated)

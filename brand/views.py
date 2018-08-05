@@ -38,7 +38,8 @@ class PublishedAdvertisementList(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['create_advertisement_form'] = AdvertisementSoftForm()
         #context['is_paginated'] = True
-        unpublished_advertisement_list = AdvSummary.objects.filter(expire_date__gte=timezone.now()). \
+        unpublished_advertisement_list = AdvSummary.objects.filter(username__exact=self.request.user).\
+            filter(expire_date__gte=timezone.now()). \
             filter(publish_date__isnull=True).order_by('create_date')
         # paginator = Paginator(unpublished_advertisement_list, 3)
         # page = self.request.GET.get('page')
