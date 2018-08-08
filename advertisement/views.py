@@ -62,3 +62,8 @@ class DeleteAdvertisement(generic.DeleteView):
     model = AdvSummary
     success_url = reverse_lazy('brand:brand_home')
     template_name = 'advertisement/delete_advertisement.html'
+
+
+class AdvertisementDetail(LoginRequiredMixin, generic.DetailView):
+    login_url = '/'
+    redirect_field_name = '/'
