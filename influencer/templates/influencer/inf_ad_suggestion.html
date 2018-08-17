@@ -8,6 +8,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#id_expire_date").datepicker();
+        });
+
+        $(function () {
+
+            $("#id_expire_date").autocomplete({
+                source: availableTags,
+                minLength: 0
+            }).keyup(function (e) {
+                if (e.which === 13) {
+                    $(".ui-menu-item").hide();
+                }
+            });
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
     {% if user.is_authenticated %}
 
         <div class="jumbotron">
@@ -17,25 +50,15 @@
         <div class="container">
             <h2>List of Advertisement</h2>
             <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/04LDEYRW59.jpg"
-                                                               alt=""></div>
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/90V03Q5Y60.jpg"
-                                                               alt=""></div>
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/O83SF2RB6D.jpg"
-                                                               alt=""></div>
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/5JVPSVP7EI.jpg"
-                                                               alt=""></div>
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/C5Y10KIIHA.jpg"
-                                                               alt=""></div>
-                <div class="col-lg-4 col-md-6 col-sm-12 "><img class="img-thumbnail img-fluid"
-                                                               src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/YSSFRY5B25.jpg"
-                                                               alt=""></div>
-
+                {% for advertisement in advertisement_list %}
+                    <a href="">
+                        <div class="col-lg-4 col-md-6 col-sm-12 " hre>
+                            <img class="img-thumbnail img-fluid"
+                                 src="/media/{{ advertisement.advertisement_image }}"
+                                 alt="Responsive image">
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
 
         </div>
