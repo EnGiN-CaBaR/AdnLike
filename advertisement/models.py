@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
+
 User = get_user_model()
 
 
@@ -22,19 +23,25 @@ class AdvStats(models.Model):
     number_of_likes = models.IntegerField(verbose_name='Number Of Likes', null=True, default=0)
 
 
+class AdvImages(models.Model):
+    summary = models.ForeignKey('advertisement.AdvSummary', related_name='adv_images', on_delete=models.SET_NULL,
+                                null=True)
+    advertisement_image = models.ImageField(upload_to=user_directory_path,
+                                            verbose_name='Advertisement Image',
+                                            null=True, blank=True)
+
+
 class AdvSummary(models.Model):
     id = models.AutoField(primary_key=True)
     guid = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
     username = models.ForeignKey(User, related_name='advertisements', on_delete=models.SET_NULL, null=True)
+    brand = models.ForeignKey('brand.Brand', related_name='brand', null=True, on_delete=models.SET_NULL)
     slug_name = models.CharField(max_length=100, null=False, default='')
     categories = models.ManyToManyField('advertisement.Category')
     name = models.CharField(max_length=255)
     budget = models.DecimalField(max_digits=38, decimal_places=2)
     max_fee_per_like = models.IntegerField()
     expire_date = models.DateField()
-    advertisement_image = models.ImageField(upload_to=user_directory_path,
-                                            verbose_name='Advertisement Image',
-                                            null=True, blank=True)
     adv_desc = models.CharField(max_length=255, verbose_name='Advertisement Description', null=True)
     adv_min_follower = models.IntegerField(verbose_name='Advertisement Minimum Follower', null=True)
     adv_max_follower = models.IntegerField(verbose_name='Advertisement Maximum Follower', null=True)

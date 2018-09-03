@@ -9,7 +9,6 @@ class Brand(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=False)
     username = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-    adv = models.ForeignKey('advertisement.AdvSummary', null=True, on_delete=models.SET_NULL)
     insert_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_date = models.DateTimeField(auto_now=True)
 

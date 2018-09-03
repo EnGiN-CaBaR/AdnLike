@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views import generic
+from django.forms import formset_factory
+from advertisement.forms import AdvertisementImageForm
 from .models import AdvSummary, Category
 
 from .forms import AdvertisementDetailForm
@@ -18,6 +20,7 @@ class PublishAdvertisementDetail(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = AdvertisementDetailForm()
+        context['formset_image'] = formset_factory(AdvertisementImageForm)
         return context
 
 
@@ -67,3 +70,5 @@ class DeleteAdvertisement(generic.DeleteView):
 class AdvertisementDetail(LoginRequiredMixin, generic.DetailView):
     login_url = '/'
     redirect_field_name = '/'
+
+

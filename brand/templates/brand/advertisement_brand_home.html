@@ -154,6 +154,7 @@
                     <td>0</td>
                     <td>{{ adv.expire_date }}</td>
                     <td><a href="/advertisement/{{ adv.id }}/" class="see_detail">detail</a></td>
+                    <td><a href="{% url 'advertisement:delete' adv.slug_name adv.pk %}" class="delete">delete</a></td>
                 </tr>
             {% endfor %}
             </tbody>

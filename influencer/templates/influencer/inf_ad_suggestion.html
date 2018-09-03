@@ -6,6 +6,7 @@
 </head>
 <body>
 {% extends 'base.html' %}
+{% load influencer_extras %}
 
 {% block content %}
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -30,17 +31,6 @@
         });
 
     </script>
-
-
-
-
-
-
-
-
-
-
-
     {% if user.is_authenticated %}
 
         <div class="jumbotron">
@@ -51,13 +41,18 @@
             <h2>List of Advertisement</h2>
             <div class="row">
                 {% for advertisement in advertisement_list %}
-                    <a href="">
-                        <div class="col-lg-4 col-md-6 col-sm-12 " hre>
-                            <img class="img-thumbnail img-fluid"
-                                 src="/media/{{ advertisement.advertisement_image }}"
-                                 alt="Responsive image">
-                        </div>
-                    </a>
+                    <div class="col-lg-3 col-lg-4 col-md-6 col-sm-12">
+                        <figure class="figure">
+                            <a href="/">
+                                <img class="figure-img img-fluid rounded"
+                                     src="{{ advertisement.advertisement_image|scale:"1200x1200" }}"
+                                     alt="Responsive image">
+                                <p> {{ advertisement.name }} </p>
+                                <p> {{ advertisement.username.name }} </p>
+                            </a>
+                            <figcaption class="figure-caption">A caption for the above image.</figcaption>
+                        </figure>
+                    </div>
                 {% endfor %}
             </div>
 

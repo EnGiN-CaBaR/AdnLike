@@ -1,9 +1,22 @@
 from django.forms import ModelForm, Textarea
-from advertisement.models import AdvSummary, Category
+from advertisement.models import AdvSummary, Category, AdvImages
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from django import forms
 import re
+
+
+class AdvertisementImageForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['advertisement_image'].widget.attrs.update(
+            {'class': 'custom-file-input'})
+        self.fields['advertisement_image'].required = False
+
+    class Meta:
+        model = AdvImages
+        exclude = ['summary']
+        help_texts = {'advertisement_image': _('Image for Advertisement')}
 
 
 class AdvertisementDetailForm(ModelForm):
@@ -13,15 +26,12 @@ class AdvertisementDetailForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['categories'].widget.attrs.update({'class': 'form-control form-control-lg'})
-        self.fields['advertisement_image'].widget.attrs.update(
-            {'class': 'custom-file-input'})
         self.fields['adv_min_follower'].widget.attrs.update(
             {'class': 'form-control form-control-lg', 'placeholder': '0'})
         self.fields['adv_max_follower'].widget.attrs.update(
             {'class': 'form-control form-control-lg', 'placeholder': '10000'})
         self.fields['adv_desc'].widget.attrs.update(
             {'class': 'form-control form-control-lg', 'placeholder': 'Descriptions #Hashtags'})
-        self.fields['advertisement_image'].required = False
 
     class Meta:
         model = AdvSummary
@@ -32,7 +42,7 @@ class AdvertisementDetailForm(ModelForm):
         help_texts = {'adv_desc': _('Advertisement Description. HashTag must be written here.'),
                       'adv_min_follower': _('Influencer''s minimum follower count'),
                       'adv_max_follower': _('Influencer''s maximum follower count'),
-                      'advertisement_image': _('Image for Advertisement')}
+                      }
 
     def clean_categories(self):
         data = self.cleaned_data['categories']

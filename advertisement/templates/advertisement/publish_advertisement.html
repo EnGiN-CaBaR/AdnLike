@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
     <h2>{{ advsummary.name }}</h2>
     <div class="row">
@@ -109,43 +108,45 @@
             {% endfor %}
         </div>
         <div class="row">
-            {% for field in form %}
-                {% if field.id_for_label not in 'id_categories' and field.id_for_label in 'id_advertisement_image' %}
-                    <div class="col-lg-6 col-md-12 col-sm-12 ">
-                        <table class="table table-borderless">
-                            <tbody>
-                            <tr>
-                                <td><h3>{{ field.label_tag }}</h3></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Upload</span>
+            {{ formset.management_form }}
+            {% for form in formset_image %}
+                {% for field in form %}
+                        <div class="col-lg-6 col-md-12 col-sm-12 ">
+                            <table class="table table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td><h3>{{ field.label_tag }}</h3></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                {{ field }}
+                                                <label class="custom-file-label" for="inputGroupFile01">Choose
+                                                    file</label>
+                                            </div>
                                         </div>
-                                        <div class="custom-file">
-                                            {{ field }}
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <small id="passwordHelpBlock" class="form-text text-muted">
-                                        {% if field.help_text %}
-                                            <p class="help">{{ field.help_text|safe }}</p>
-                                        {% endif %}
-                                    </small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:red">{{ field.errors }}</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <small id="passwordHelpBlock" class="form-text text-muted">
+                                            {% if field.help_text %}
+                                                <p class="help">{{ field.help_text|safe }}</p>
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span style="color:red">{{ field.errors }}</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                {% endfor %}
             {% endfor %}
         </div>
         <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
